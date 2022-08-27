@@ -1,0 +1,49 @@
+import maya.cmds as cmds
+
+#////////////////////////WINDOW//////////////////////
+def makeWindow():
+    makeWindow.winName = 'Piston Builder'
+    if cmds.window(makeWindow.winName, q=1, ex=1):
+        cmds.deleteUI(makeWindow.winName)
+    cmds.window(makeWindow.winName, w=500)
+    cmds.columnLayout()
+    cmds.text('Piston Rigger')
+    cmds.separator(w=400, h=20)
+    cmds.text('Click here to generate the piston')
+    makeWindow.GenBtn=cmds.button(l='Generate Piston', c='CreateBoth()')
+    cmds.separator()
+    cmds.showWindow()
+
+makeWindow()
+
+#/////////////////////////FUNCTIONS/////////////////
+def CreateBoth():
+    cmds.polyCylinder(n='Cylinder1',r=1, h=5)
+    cmds.move(0, -2.5, 0,'Cylinder1.scalePivot', 'Cylinder1.rotatePivot')
+    cmds.polyCylinder(n='Cylinder2',r=0.50, h=6)
+    cmds.move(0,1.2,0)
+    cmds.move(0, 4.2, 0,'Cylinder2.scalePivot', 'Cylinder2.rotatePivot')
+    cmds.makeIdentity(apply=True, t=1, r=1, s=1)
+    cmds.spaceLocator(n='Top_Loc')
+    cmds.scale(5,5,5)
+    cmds.move(0, 4.2, 0, r=1)
+    #topSel = cmds.ls(ls='Cylinder1', 'Cylinder2')
+    #cmds.select(topSel)
+    cmds.spaceLocator(n='Bot_Loc')
+    cmds.scale(5,5,5)
+    cmds.move(0, -2.5, 0, r=1)
+    cmds.select('Top_Loc', r=True)
+    cmds.select('Cylinder2', add=True)
+    cmds.parent()
+    cmds.select('Bot_Loc', r=True)
+    cmds.select('Cylinder1', add=True)
+    cmds.parent()
+    cmds.select('Bot_Loc', r=True)
+    cmds.select('Cylinder2', add=True)
+    cmds.aimConstraint(aim=[0.0, -1.0, 0.0])
+    cmds.select('Top_Loc', r=True)
+    cmds.select('Cylinder1', add=True)
+    cmds.aimConstraint(aim=[0.0, 1.0, 0.0])
+    cmds.cycleCheck(e=0) 
+    
+    
